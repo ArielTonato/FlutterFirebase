@@ -25,9 +25,46 @@ class _HomeState extends State<Home> {
               itemCount: snapshot.data?.length,
               itemBuilder: (context, index) {
                 return Dismissible(
+                  onDismissed: (direction) async {
+                     await deletePeople(snapshot.data?[index]['uid']);
+                     snapshot.data?.removeAt(index);
+                  },
+                  confirmDismiss: (direction) async {
+                    bool result = await showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text(
+                              '¿Esta seguro de que desea eliminar a ${snapshot.data?[index]['name']} ?'),
+                          actions: [
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.pop(
+                                    context,
+                                    false,
+                                  );
+                                },
+                                child: const Text('Cancelar',style: TextStyle(color: Colors.red),)),
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.pop(
+                                    context,
+                                    true,
+                                  );
+                                },
+                                child: const Text('Si, estoy seguro')),
+                          ],
+                        );
+                      },
+                    );
+
+                    return result;
+                  },
                   background: Container(
                     color: Colors.red,
-                    child:const Icon(Icons.delete),),
+                    alignment: Alignment.centerLeft,
+                    child: const Icon(Icons.delete),
+                  ),
                   direction: DismissDirection.startToEnd,
                   key: Key(snapshot.data?[index]['uid']),
                   child: ListTile(

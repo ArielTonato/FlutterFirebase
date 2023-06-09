@@ -20,7 +20,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return  MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Material App',
+      theme: ThemeData(
+        useMaterial3: true,
+        brightness: Brightness.dark
+      ),
       initialRoute: '/',
       routes: {
        '/':(context) => const Home(),
